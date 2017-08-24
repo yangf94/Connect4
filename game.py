@@ -1,4 +1,5 @@
 import pygame
+from gamestate import MainMenuState
 
 pygame.init()
 
@@ -9,11 +10,12 @@ class Game:
         self.screen = pygame.display.set_mode((self.width, self.height))
         self.running = True
         self.clock = pygame.time.Clock()
+        self.state_stack = []
+        self.state_stack.append(MainMenuState(self))
 
     def run(self):
         while(self.running):
-            for event in pygame.event.get():
-                self.handleEvent(event)
+            self.handleEvents()
 
             self.render()
 
@@ -21,10 +23,15 @@ class Game:
 
         pygame.quit()
 
-    def handleEvent(self, event):
-        if(event.type==pygame.QUIT):
-            self.running = False
-        
+    def handleEvents(self):
+        for event in pygame.event.get():
+            if(event.type==pygame.QUIT):
+                self.running = False
+            self.state_stack[-1].handleEvent(event)
     def render(self):
-        self.screen.fill((0,230,210))
-        pygame.display.flip()
+        self.state_stack[-1].render()
+        
+    def update(self):
+        self.state_stack[-1].update()
+
+    
