@@ -8,4 +8,8 @@ class ResourceManager:
 
     def loadResource(self, name, filename, rtype):
         if(rtype == IMAGE_TYPE):
-            self.resources[name] = 
+            self.resources[name] = pygame.image.load(filename)
+
+    def get(self, name):
+        return self.resources[name]
+    

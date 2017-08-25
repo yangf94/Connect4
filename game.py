@@ -1,5 +1,6 @@
 import pygame
 from gamestate import MainMenuState
+from resourcemanager import ResourceManager, IMAGE_TYPE
 
 pygame.init()
 
@@ -12,6 +13,11 @@ class Game:
         self.clock = pygame.time.Clock()
         self.state_stack = []
         self.state_stack.append(MainMenuState(self))
+
+        self.resources = ResourceManager()
+        self.resources.loadResource("board", "assets/board.png", IMAGE_TYPE)
+        self.resources.loadResource("red piece", "assets/red_piece.png", IMAGE_TYPE)
+        self.resources.loadResource("black piece", "assets/black_piece.png", IMAGE_TYPE)
 
     def run(self):
         while(self.running):

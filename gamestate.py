@@ -1,5 +1,6 @@
 import pygame
 from gui import Button
+from board import Board
 
 class GameState:
     def __init__(self, game):
@@ -18,7 +19,7 @@ class MainMenuState(GameState):
         x = (game.width-150)/2
         self.buttons.append(Button("1-Player",(x,100,150,40), (220,220,0),self.changeOnePlayerState))
     def render(self):
-        self.game.screen.fill((0,230,210))
+        self.game.screen.fill((170,170,170))
         for button in self.buttons:
             button.draw(self.game.screen)
         pygame.display.flip()
@@ -32,10 +33,11 @@ class MainMenuState(GameState):
 class OnePlayerState(GameState):
     def __init__(self, game):
         super().__init__(game)
+        self.board = Board(self.game.width, self.game.height)
     
     def render(self):
-        self.game.screen.fill((0,230,210))
-        
+        self.game.screen.fill((170,170,170))
+        self.board.draw(self.game.screen, self.game.resources)
         pygame.display.flip()
     
     
