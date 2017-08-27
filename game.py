@@ -34,6 +34,8 @@ class Game:
             if(event.type==pygame.QUIT):
                 self.running = False
             self.state_stack[-1].handleEvent(event)
+        self.state_stack[-1].checkInputs()
+        
     def render(self):
         self.state_stack[-1].render()
         
