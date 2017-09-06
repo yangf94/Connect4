@@ -1,5 +1,4 @@
 
-
 class Board:
     EMPTY = 0
     BLACK_PIECE = 1
@@ -8,7 +7,8 @@ class Board:
     def __init__(self, screen_width, screen_height):
         self.columns = []
         for i in range(7):
-            self.columns.append([])
+            self.columns.append([Board.EMPTY]*6)
+        self.tops = [0]*7
         self.pieceSize = 64
         self.width = self.pieceSize*7
         self.height = self.pieceSize*6
@@ -26,15 +26,70 @@ class Board:
             for j in range(len(self.columns[i])):
                 x = self.x+64*i
                 y = (self.y+self.height)-(j+1)*64
-                if(self.columns[i][j] == RED_PIECE):
+                if(self.columns[i][j] == Board.RED_PIECE):
                     screen.blit(resources.get("red piece"), (x,y))
-                elif(self.columns[i][j] == BLACK_PIECE):
+                elif(self.columns[i][j] == Board.BLACK_PIECE):
                     screen.blit(resources.get("black piece"), (x,y))
     def canInsertIntoColumn(self, column):
-        return len(self.columns[column])<6
+        return self.tops[column]<6
 
     def insertIntoColumn(self, column, piece):
-        print(self.columns)
         if(self.canInsertIntoColumn(column)):
-            self.columns[column].append(1)
-        print(self.columns)
+            self.columns[column][self.tops[column]] = piece
+            self.tops[column]+=1
+    def checkWin(self, piece):
+        for i in range(6):
+            if(self.checkRow(piece, i)):
+                return True
+
+        for i in range(7):
+            if(self.checkColumn(piece, i)):
+                return True
+        if(self.checkDiagonals(piece)):
+            return True
+        
+        return False
+    def checkRow(self, piece, row):
+        count = 0
+        for i in range(7):
+            if(self.columns[i][row]==piece):
+                count+=1
+                if(count==4):
+                    return True
+            else:
+                count = 0
+        return False
+    def checkColumn(self, piece, column):
+        count = 0
+        for i in range(6):
+            if(self.columns[column][i]==piece):
+                count+=1
+                if(count==4):
+                    return True
+            else:
+                count = 0
+        return False
+
+    def checkDiagonals(self, piece):
+        for i in range(4):
+            for j in range(3):
+                count = 0
+                for k in range(4):
+                    if(self.columns[i+k][j+k]==piece):
+                        count+=1
+                        if(count==4):
+                            return True
+                    else:
+                        break
+        
+        for i in range(6, 2, -1):
+            for j in range(3):
+                count = 0
+                for k in range(4):
+                    if(self.columns[i-k][j+k]==piece):
+                        count+=1
+                        if(count==4):
+                            return True
+                    else:
+                        break
+        return False

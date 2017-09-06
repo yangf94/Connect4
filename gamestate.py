@@ -60,6 +60,8 @@ class TwoPlayerState(GameState):
         self.turn = False
 
         self.heldPiece = None
+
+        self.gameOver = False
     
     def render(self):
         self.game.screen.fill((170,170,170))
@@ -79,11 +81,29 @@ class TwoPlayerState(GameState):
 
         pygame.display.flip()
     
+    def handleEvent(self, event):
+        if(event.type==pygame.MOUSEBUTTONDOWN):
+            pos = event.pos
+            column = int((pos[0]-self.board.x)/self.board.pieceSize)
+            if(column>=0 and column<7 and (not self.gameOver)):
+                if(self.board.canInsertIntoColumn(column)):
+                    if(self.turn == TwoPlayerState.PLAYER1_TURN):
+                        self.board.insertIntoColumn(column, self.player1Piece)
+                        if(self.board.checkWin(self.player1Piece)):
+                            print("Player 1 wins")
+                            self.gameOver = True
+                    elif(self.turn == TwoPlayerState.PLAYER2_TURN):
+                        self.board.insertIntoColumn(column, self.player2Piece)
+                        if(self.board.checkWin(self.player2Piece)):
+                            print("Player 2 wins")
+                            self.gameOver = True
+                    self.turn = not self.turn
     
     def checkInputs(self):
         pos = pygame.mouse.get_pos()
         column = int((pos[0]-self.board.x)/self.board.pieceSize)
-        if(column>=0 and column<7):
+        if(column>=0 and column<7 and (not self.gameOver)):
             self.heldPiece = ((self.board.x+column*self.board.pieceSize), (self.board.y-self.board.pieceSize))
         else:
             self.heldPiece = None
+    
