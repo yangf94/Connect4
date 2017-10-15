@@ -1,9 +1,9 @@
 import pygame
 from gui import MessageBox
-from gamestate import GameState
+from playablestate import PlayableState
 from board import Board
 
-class OnePlayerState(GameState):
+class OnePlayerState(PlayableState):
     def __init__(self, game):
         super().__init__(game)
         self.board = Board(self.game.width, self.game.height)
