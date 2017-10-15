@@ -1,6 +1,7 @@
 import pygame
 from gamestate import MainMenuState
 from resourcemanager import ResourceManager, IMAGE_TYPE
+import tkinter as tk
 
 pygame.init()
 
@@ -19,10 +20,12 @@ class Game:
         self.resources.loadResource("red piece", "assets/red_piece.png", IMAGE_TYPE)
         self.resources.loadResource("black piece", "assets/black_piece.png", IMAGE_TYPE)
 
+        self.tkroot = tk.Tk()
+        self.tkroot.wm_withdraw()
     def run(self):
         while(self.running):
             self.handleEvents()
-
+            self.update()
             self.render()
 
             self.clock.tick()
