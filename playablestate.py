@@ -6,7 +6,6 @@ from board import Board
 class PlayableState(GameState):
     PLAYER1_TURN = False
     PLAYER2_TURN = True
-
     def __init__(self, game):
         super().__init__(game)
         self.board = Board(self.game.width, self.game.height)

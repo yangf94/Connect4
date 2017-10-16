@@ -4,7 +4,6 @@ from playablestate import PlayableState
 from board import Board
 
 class TwoPlayerState(PlayableState):
-    
     def __init__(self, game):
         super().__init__(game)
         
@@ -39,11 +38,17 @@ class TwoPlayerState(PlayableState):
                         if(self.board.checkWin(self.player1Piece)):
                             self.gameOver = True
                             self.gameOverMessageBox.text = "Player 1 wins"
+                        elif(self.board.checkDraw()):
+                                self.gameOver = True
+                                self.gameOverMessageBox.text = "Draw"
                     elif(self.turn == TwoPlayerState.PLAYER2_TURN):
                         self.board.insertIntoColumn(column, self.player2Piece)
                         if(self.board.checkWin(self.player2Piece)):
                             self.gameOver = True
                             self.gameOverMessageBox.text = "Player 2 wins"
+                        elif(self.board.checkDraw()):
+                                self.gameOver = True
+                                self.gameOverMessageBox.text = "Draw"
                     if(not self.gameOver):
                         self.turn = not self.turn
 

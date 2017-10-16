@@ -37,6 +37,11 @@ class Board:
         if(self.canInsertIntoColumn(column)):
             self.columns[column][self.tops[column]] = piece
             self.tops[column]+=1
+    def checkDraw(self):
+        for i in range(7):
+            if(self.canInsertIntoColumn(i)):
+                return False
+        return True
     def checkWin(self, piece):
         for i in range(6):
             if(self.checkRow(piece, i)):
