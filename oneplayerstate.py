@@ -3,11 +3,11 @@ import random
 from gui import MessageBox
 from playablestate import PlayableState
 from board import Board
-from gameai import Level1AI
+from gameai import *
 import time
 
 class OnePlayerState(PlayableState):
-    def __init__(self, game):
+    def __init__(self, game, AILevel):
         super().__init__(game)
 
         self.humanTurn = None
@@ -31,11 +31,14 @@ class OnePlayerState(PlayableState):
         elif(self.AITurn == OnePlayerState.PLAYER2_TURN):
             self.aiPiece = self.player2Piece
             self.humanPiece = self.player1Piece
-            
-        self.ai = Level1AI()
+
+        if(AILevel==1):
+            self.ai = Level1AI()
+        elif(AILevel==2):
+            self.ai = Level2AI()
     
     def update(self):
-        if(self.turn == self.AITurn):
+        if(self.turn == self.AITurn and not self.gameOver):
             if(not self.ai.running):
                 self.ai.calculateMove(self.board, self.aiPiece, self.humanPiece)
             elif(self.ai.done):

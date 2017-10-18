@@ -37,6 +37,12 @@ class Board:
         if(self.canInsertIntoColumn(column)):
             self.columns[column][self.tops[column]] = piece
             self.tops[column]+=1
+    def removeFromColumn(self, column):
+        if(self.tops[column]==0):
+            raise RuntimeError("Invalid remove operation")
+        self.tops[column]-=1
+        self.columns[column][self.tops[column]] = Board.EMPTY
+
     def checkDraw(self):
         for i in range(7):
             if(self.canInsertIntoColumn(i)):

@@ -1,13 +1,13 @@
 import pygame
 
 class Button:
-    def __init__(self, text, rect, color, action=None):
+    def __init__(self, text, rect, color, action=None, args=()):
         self.text = text
         self.rect = rect
         self.color = color
         self.action = action
         self.font = pygame.font.SysFont('Calibri', 25, True, False)
-
+        self.args = args
     def draw(self, screen):
         pygame.draw.rect(screen, self.color, self.rect)
         text = self.font.render(self.text, True, (0,0,0))
@@ -21,7 +21,7 @@ class Button:
         if(pos[0]>self.rect[0] and pos[0]<self.rect[0]+self.rect[2]):
             if(pos[1]>self.rect[1] and pos[1]<self.rect[1]+self.rect[3]):
                 if(button==1 and self.action!=None):
-                    self.action()
+                    self.action(*self.args)
                 elif(button==1 and self.action==None):
                     print("Click")
 
