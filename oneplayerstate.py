@@ -36,6 +36,8 @@ class OnePlayerState(PlayableState):
             self.ai = Level1AI()
         elif(AILevel==2):
             self.ai = Level2AI()
+        elif(AILevel==3):
+            self.ai = Level3AI()
     
     def update(self):
         if(self.turn == self.AITurn and not self.gameOver):

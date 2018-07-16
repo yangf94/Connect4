@@ -9,7 +9,7 @@ class SelectDifficultyState(GameState):
         self.buttons = []
         x = (game.width)//2-250
         
-        for i in range(1,3):
+        for i in range(1,4):
             self.buttons.append(Button(str(i),(x+25+((i-1)%5)*100,160+((i-1)//5)*100,50,50), (220,220,0),action=self.selectAIDifficulty, args=(i,)))
 
     def render(self):
@@ -24,8 +24,8 @@ class SelectDifficultyState(GameState):
 
 
     def selectAIDifficulty(self, i):
-        if(i==1 or i==2):
+        if(i <= 3):
             self.game.state_stack.pop()
             self.game.state_stack.append(OnePlayerState(self.game,i))
         else:
-            print(i)
+            print("Level "+str(i)+" AI hasn't been implemented")

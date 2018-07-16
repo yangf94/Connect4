@@ -13,8 +13,6 @@ class GameAI:
         self.running = True
         self.done = False
         thread.start()
-    def calculate(self, board, aiPiece, humanPiece):
-        self.done = True
 
     def getMove(self):
         move = self.move
@@ -23,54 +21,102 @@ class GameAI:
         self.done = False
         return move
 
-    def simplestEvaluation(self, board, aiPiece, humanPiece, move):
+    def evaluateBoard(self, board, aiPiece, humanPiece):
         score = 0
-        board.insertIntoColumn(move, aiPiece)
         
         if(board.checkWin(aiPiece)):
             score = 100
 
-        board.removeFromColumn(move)
-
         return score
+
+    def getPossibleMoves(self, board):
+        possible = []
+
+        for i in range(7):
+            if (board.canInsertIntoColumn(i)):
+                possible.append(i)
+
+        return possible
     
 class Level1AI(GameAI):
     def __init__(self):
         super().__init__()
 
     def calculate(self, board, aiPiece, humanPiece):
-        super().calculate(board, aiPiece, humanPiece)
-        possible = []
-        
-        for i in range(7):
-            if(board.canInsertIntoColumn(i)):
-                possible.append(i)
+        possible = self.getPossibleMoves(board)
 
         if(len(possible)>0):
             self.move = random.choice(possible)
+
+        # telling the thread that the AI is done evaluating a move
+        self.done = True
         
-class Level2AI(GameAI):
+class Level2AI(Level1AI):
     def __init__(self):
         super().__init__()
 
     def calculate(self, board, aiPiece, humanPiece):
-        possible = []
-        
-        for i in range(7):
-            if(board.canInsertIntoColumn(i)):
-                possible.append(i)
+        possible = self.getPossibleMoves(board)
 
         bestMoves = []
         bestScore = 0
-        for p in possible:
-            score = self.simplestEvaluation(board,aiPiece,humanPiece,p)
+        for move in possible:
+            # Temporarily add piece to board to evaluate board state
+            board.insertIntoColumn(move, aiPiece)
+
+            score = self.evaluateBoard(board,aiPiece,humanPiece)
             if(score==bestScore):
-                bestMoves.append(p)
+                bestMoves.append(move)
             elif(score>bestScore):
                 bestScore = score
                 bestMoves = []
-                bestMoves.append(p)
-        print(bestMoves)
+                bestMoves.append(move)
+
+            # Remove temporarily added piece from board
+            board.removeFromColumn(move)
+
         self.move = random.choice(bestMoves)
-        super().calculate(board, aiPiece, humanPiece)
+
+        # telling the thread that the AI is done evaluating a move
+        self.done = True
+
+
+class Level3AI(Level2AI):
+    def __init__(self):
+        super().__init__()
+
+    def calculate(self, board, aiPiece, humanPiece):
+        possible = self.getPossibleMoves(board)
+
+        bestMoves = []
+        bestScore = 0
+        for move in possible:
+            # Temporarily add piece to board to evaluate board state
+            board.insertIntoColumn(move, aiPiece)
+
+            score = self.evaluateBoard(board,aiPiece,humanPiece)
+
+            # Remove temporarily added piece from board
+            board.removeFromColumn(move)
+
+            # Temporarily add human piece to board to see if human can win
+            board.insertIntoColumn(move, humanPiece)
+
+            score += 2*self.evaluateBoard(board, humanPiece, aiPiece)
+
+            # Remove temporarily added piece from board
+            board.removeFromColumn(move)
+
+            if(score==bestScore):
+                bestMoves.append(move)
+            elif(score>bestScore):
+                bestScore = score
+                bestMoves = []
+                bestMoves.append(move)
+
+        self.move = random.choice(bestMoves)
+        print(self.move)
+
+        # telling the thread that the AI is done evaluating a move
+        self.done = True
 
